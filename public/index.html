@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chùa Thiên Cảnh — Thế Giới Chùa Ảo (TikTok Live 9:16)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Noto+Serif:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/css/live.css?v=thien-canh-v1" />
+</head>
+<body>
+  <div class="app-workspace">
+    <!-- ====================================================================
+         KHUNG 9:16 CHUẨN TIKTOK LIVE / OBS BROWSER SOURCE (1080 x 1920)
+         CHÙA THIÊN CẢNH — THẾ GIỚI CHÙA ẢO
+         ==================================================================== -->
+    <div class="stage-wrapper" id="stageWrapper">
+      <div class="stage-9x16" id="stage9x16">
+        <!-- 1. HÌNH NỀN CHÁNH ĐIỆN ĐỨC PHẬT A DI ĐÀ KIM THÂN CHÙA THIÊN CẢNH -->
+        <img
+          src="/assets/thien_canh_stage.jpg"
+          alt="Chùa Thiên Cảnh — Thế Giới Chùa Ảo"
+          class="sanctuary-bg-img"
+          id="sanctuaryBgImg"
+          loading="eager"
+          decoding="sync"
+        />
+
+        <!-- 2. THANH TIÊU ĐỀ TOP BAR (CHÙA THIÊN CẢNH, LIVE 24/7, 12.8K, + FOLLOW, AVATARS, CLOSE) -->
+        <header class="tc-top-bar" id="tcTopBar">
+          <div class="tc-channel-badge">
+            <div class="tc-channel-avatar-ring">
+              <img src="/assets/channel_lotus_logo.png" alt="Chùa Thiên Cảnh" />
+            </div>
+            <div class="tc-channel-meta">
+              <div class="tc-channel-name-row">
+                <span class="tc-channel-name">Chùa Thiên Cảnh</span>
+                <span class="tc-verified-check" title="Kênh chính thức">✔</span>
+              </div>
+              <div class="tc-channel-status-row">
+                <span class="tc-live-pill">((●)) LIVE 24/7</span>
+                <span class="tc-viewers-pill">👁 12.8K</span>
+              </div>
+            </div>
+            <button class="tc-follow-btn" id="btnTcFollow" title="Theo dõi kênh">+ Follow</button>
+          </div>
+
+          <div class="tc-top-right">
+            <div class="tc-avatar-stack" title="Phật tử đang xem">
+              <img src="/assets/avatar_top_1.png" class="tc-stack-img" alt="" />
+              <img src="/assets/avatar_top_2.png" class="tc-stack-img" alt="" />
+              <img src="/assets/avatar_top_3.png" class="tc-stack-img" alt="" />
+              <img src="/assets/avatar_top_4.png" class="tc-stack-img" alt="" />
+              <span class="tc-stack-count">+6.4K</span>
+            </div>
+            <button class="tc-close-btn" id="btnTcClose" title="Đóng">✕</button>
+          </div>
+        </header>
+
+        <!-- 3. BẢNG NGHI THỨC CHÙA THIÊN CẢNH (BÊN TRÁI: 7 NGHI THỨC TƯƠNG TÁC) -->
+        <div class="tc-ritual-panel" id="tcRitualPanel">
+          <div class="tc-panel-header">
+            <span class="tc-panel-title-lotus">🪷</span>
+            <div class="tc-panel-title">Nghi Thức</div>
+            <div class="tc-panel-subtitle">Chùa Thiên Cảnh</div>
+          </div>
+          <div class="tc-ritual-list">
+            <button class="tc-ritual-btn" id="btnTcDangLe" data-ritual="dang-le" title="Dâng Lễ Vật">
+              <span class="tc-ritual-btn-icon">🪔</span>
+              <span class="tc-ritual-btn-label">Dâng Lễ Vật</span>
+            </button>
+            <button class="tc-ritual-btn" id="btnTcHoaSen" data-ritual="hoa-sen" title="Dâng Hoa Sen">
+              <span class="tc-ritual-btn-icon">🪷</span>
+              <span class="tc-ritual-btn-label">Dâng Hoa Sen</span>
+            </button>
+            <button class="tc-ritual-btn" id="btnTcThapDen" data-ritual="thap-den" title="Thắp Đèn Cầu An">
+              <span class="tc-ritual-btn-icon">🕯️</span>
+              <span class="tc-ritual-btn-label">Thắp Đèn Cầu An</span>
+            </button>
+            <button class="tc-ritual-btn" id="btnTcThinhChuong" data-ritual="thinh-chuong" title="Thỉnh Chuông">
+              <span class="tc-ritual-btn-icon">🔔</span>
+              <span class="tc-ritual-btn-label">Thỉnh Chuông</span>
+            </button>
+            <button class="tc-ritual-btn" id="btnTcDangHuong" data-ritual="dang-huong" title="Dâng Hương">
+              <span class="tc-ritual-btn-icon">🥢</span>
+              <span class="tc-ritual-btn-label">Dâng Hương</span>
+            </button>
+            <button class="tc-ritual-btn" id="btnTcTungKinh" data-ritual="tung-kinh" title="Tụng Kinh">
+              <span class="tc-ritual-btn-icon">📜</span>
+              <span class="tc-ritual-btn-label">Tụng Kinh</span>
+            </button>
+            <button class="tc-ritual-btn" id="btnTcCauAn" data-ritual="cau-an" title="Cầu An Gia Đình">
+              <span class="tc-ritual-btn-icon">🪷</span>
+              <span class="tc-ritual-btn-label">Cầu An Gia Đình</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. KHỐI BẢNG PHẢI: LỊCH NGHI THỨC & PHẬT TỬ ĐANG CHỜ DÂNG LỄ -->
+        <div class="tc-right-stack" id="tcRightStack">
+          <!-- 4A. LỊCH NGHI THỨC HÔM NAY -->
+          <div class="tc-schedule-panel" id="tcSchedulePanel">
+            <div class="tc-panel-header">
+              <span class="tc-panel-title-lotus">📅</span>
+              <span class="tc-panel-title">Lịch Nghi Thức Hôm Nay</span>
+            </div>
+            <div class="tc-schedule-list">
+              <div class="tc-schedule-item">
+                <span class="tc-schedule-time">06:00</span>
+                <span class="tc-schedule-name">Chuông Sớm</span>
+              </div>
+              <div class="tc-schedule-item">
+                <span class="tc-schedule-time">07:00</span>
+                <span class="tc-schedule-name">Tụng Kinh</span>
+              </div>
+              <div class="tc-schedule-item">
+                <span class="tc-schedule-time">12:00</span>
+                <span class="tc-schedule-name">Tịnh Tâm</span>
+              </div>
+              <div class="tc-schedule-item">
+                <span class="tc-schedule-time">17:00</span>
+                <span class="tc-schedule-name">Công Phu Chiều</span>
+              </div>
+              <div class="tc-schedule-item active">
+                <span class="tc-schedule-time">20:00</span>
+                <span class="tc-schedule-name">Thiền & Lời Phật Dạy</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4B. PHẬT TỬ ĐANG CHỜ DÂNG LỄ -->
+          <div class="tc-queue-panel" id="tcQueuePanel">
+            <div class="tc-panel-header">
+              <span class="tc-panel-title-lotus">🪷</span>
+              <div class="tc-panel-title">Phật Tử Đang Chờ</div>
+              <div class="tc-panel-subtitle">Dâng Lễ</div>
+            </div>
+            <div class="tc-queue-list" id="tcQueueList">
+              <div class="tc-queue-item">
+                <div class="tc-queue-rank-name">
+                  <span class="tc-queue-rank gold">1</span>
+                  <span class="tc-queue-name">Minh Tâm</span>
+                </div>
+                <span class="tc-queue-hand">🙏</span>
+              </div>
+              <div class="tc-queue-item">
+                <div class="tc-queue-rank-name">
+                  <span class="tc-queue-rank silver">2</span>
+                  <span class="tc-queue-name">Diệu Hạnh</span>
+                </div>
+                <span class="tc-queue-hand">🙏</span>
+              </div>
+              <div class="tc-queue-item">
+                <div class="tc-queue-rank-name">
+                  <span class="tc-queue-rank bronze">3</span>
+                  <span class="tc-queue-name">Quang Phúc</span>
+                </div>
+                <span class="tc-queue-hand">🙏</span>
+              </div>
+              <div class="tc-queue-item">
+                <div class="tc-queue-rank-name">
+                  <span class="tc-queue-rank">4</span>
+                  <span class="tc-queue-name">Thanh Mai</span>
+                </div>
+                <span class="tc-queue-hand">🙏</span>
+              </div>
+              <div class="tc-queue-item">
+                <div class="tc-queue-rank-name">
+                  <span class="tc-queue-rank">5</span>
+                  <span class="tc-queue-name">An Nhiên</span>
+                </div>
+                <span class="tc-queue-hand">🙏</span>
+              </div>
+            </div>
+            <div class="tc-queue-footer" id="tcQueueFooter">
+              ... Còn <span id="tcQueueCount">128</span> Phật Tử
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. HUY HIỆU CHỦ LỄ CHÙA THIÊN CẢNH (TRUNG TÂM TRƯỚC BÀN THỜ) -->
+        <div class="tc-chule-badge" id="tcChuLeBadge">
+          <span class="tc-chule-lotus">🪷</span>
+          <div class="tc-chule-texts">
+            <div class="tc-chule-title">Chủ Lễ</div>
+            <div class="tc-chule-sub">Chùa Thiên Cảnh</div>
+          </div>
+          <span class="tc-chule-lotus">🪷</span>
+        </div>
+        <div id="centralWorshipper" style="display:none;">
+          <div id="centralSpriteStack"></div>
+          <div id="centralAction"></div>
+        </div>
+
+        <!-- 6. LỚP THẺ TÊN TƯƠNG TÁC CHO CÁC PHẬT TỬ HAI BÊN ĐẠO TRÀNG -->
+        <div class="tc-devotees-layer" id="tcDevoteesLayer">
+          <!-- Hàng bên trái -->
+          <div class="tc-devotee-pill" style="left: 95px; top: 935px;">🌸 Minh Tâm</div>
+          <div class="tc-devotee-pill" style="left: 110px; top: 988px;">🌸 Diệu Hạnh</div>
+          <div class="tc-devotee-pill" style="left: 125px; top: 1041px;">🙏 Quang Phúc</div>
+          <div class="tc-devotee-pill" style="left: 140px; top: 1094px;">🌸 Thanh Mai</div>
+          <div class="tc-devotee-pill" style="left: 125px; top: 1147px;">🙏 An Nhiên</div>
+          <div class="tc-devotee-pill" style="left: 155px; top: 1200px;">🌸 Thiện Đức</div>
+          <div class="tc-devotee-pill" style="left: 145px; top: 1253px;">🙏 Bảo Ngọc</div>
+          <div class="tc-devotee-pill" style="left: 165px; top: 1306px;">🌸 Tuệ Lâm</div>
+
+          <!-- Hàng bên phải -->
+          <div class="tc-devotee-pill" style="right: 95px; top: 935px;">Ngọc Hân 🌸</div>
+          <div class="tc-devotee-pill" style="right: 85px; top: 988px;">Thuận Hòa 🙏</div>
+          <div class="tc-devotee-pill" style="right: 110px; top: 1041px;">Hồng Phúc 🌸</div>
+          <div class="tc-devotee-pill" style="right: 125px; top: 1094px;">Vạn An 🙏</div>
+          <div class="tc-devotee-pill" style="right: 115px; top: 1147px;">Kim Oanh 🌸</div>
+          <div class="tc-devotee-pill" style="right: 130px; top: 1200px;">Đức Thịnh 🙏</div>
+          <div class="tc-devotee-pill" style="right: 125px; top: 1253px;">Gia Huy 🌸</div>
+          <div class="tc-devotee-pill" style="right: 135px; top: 1306px;">Tâm Nguyện 🙏</div>
+        </div>
+
+        <!-- 7. PILL TRUNG TÂM: ĐANG CHỜ DÂNG LỄ 128 PHẬT TỬ -->
+        <div class="tc-center-waiting-pill" id="tcCenterWaitingPill">
+          👥 Đang Chờ Dâng Lễ: <span id="tcDevoteeWaitingNum">128</span> Phật Tử
+        </div>
+
+        <!-- 8. LỚP BÌNH LUẬN CẦU NGUYỆN (FLOAT TRÊN MÀN HÌNH - BOTTOM LEFT) -->
+        <div class="tc-prayer-stream" id="tcPrayerStream">
+          <!-- Comment 1: Ngọc Mai (VIP) -->
+          <div class="tc-prayer-card" data-vip="true">
+            <img src="/assets/avatar_ngocmai.png" class="tc-prayer-avatar" alt="" />
+            <div class="tc-prayer-content">
+              <div class="tc-prayer-user-line">
+                <span class="tc-prayer-user">Ngọc Mai</span>
+                <span class="tc-prayer-vip-badge">⭐VIP</span>
+              </div>
+              <div class="tc-prayer-text">Kính dâng hoa sen, cầu cho gia đình bình an, sức khỏe, an lạc! 🙏</div>
+            </div>
+          </div>
+
+          <!-- Comment 2: Minh Tâm -->
+          <div class="tc-prayer-card">
+            <img src="/assets/avatar_minhtam.png" class="tc-prayer-avatar" alt="" />
+            <div class="tc-prayer-content">
+              <div class="tc-prayer-user-line">
+                <span class="tc-prayer-user">Minh Tâm</span>
+              </div>
+              <div class="tc-prayer-text">Dâng lễ cầu bình an cho cả gia đình 🙏</div>
+            </div>
+          </div>
+
+          <!-- Comment 3: Diệu Hạnh -->
+          <div class="tc-prayer-card">
+            <img src="/assets/avatar_dieuhanh.png" class="tc-prayer-avatar" alt="" />
+            <div class="tc-prayer-content">
+              <div class="tc-prayer-user-line">
+                <span class="tc-prayer-user">Diệu Hạnh</span>
+              </div>
+              <div class="tc-prayer-text">Cầu sức khỏe, công việc hanh thông 💖</div>
+            </div>
+          </div>
+
+          <!-- Comment 4: Quang Phúc (VIP) -->
+          <div class="tc-prayer-card" data-vip="true">
+            <img src="/assets/avatar_quangphuc.png" class="tc-prayer-avatar" alt="" />
+            <div class="tc-prayer-content">
+              <div class="tc-prayer-user-line">
+                <span class="tc-prayer-user">Quang Phúc</span>
+                <span class="tc-prayer-vip-badge">⭐VIP</span>
+              </div>
+              <div class="tc-prayer-text">Cầu cho cha mẹ bình an, sống lâu trăm tuổi 🙏</div>
+            </div>
+          </div>
+
+          <!-- Comment 5: Thanh Mai -->
+          <div class="tc-prayer-card">
+            <img src="/assets/avatar_thanhmai.png" class="tc-prayer-avatar" alt="" />
+            <div class="tc-prayer-content">
+              <div class="tc-prayer-user-line">
+                <span class="tc-prayer-user">Thanh Mai</span>
+              </div>
+              <div class="tc-prayer-text">Mong mọi việc thuận lợi, gia đạo an yên 🌸</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. HIỆU ỨNG TIM BAY VÀ HOA SEN PHÁT SÁNG (BOTTOM RIGHT) -->
+        <div class="tc-floating-hearts" id="tcFloatingHearts">
+          <span class="tc-heart" style="left: 30px; animation-delay: 0s;">💖</span>
+          <span class="tc-heart" style="left: 65px; animation-delay: 0.6s;">💕</span>
+          <span class="tc-heart" style="left: 45px; animation-delay: 1.2s;">❤️</span>
+          <span class="tc-heart" style="left: 80px; animation-delay: 1.8s;">💖</span>
+        </div>
+        <div class="tc-big-lotus-deco" id="tcBigLotusDeco" title="Hoa sen phát quang">🪷</div>
+
+        <!-- 11. THANH ĐIỀU HƯỚNG DƯỚI CÙNG (7 TABS VÒNG CUNG VÀNG) -->
+        <nav class="tc-bottom-dock" id="tcBottomDock">
+          <button class="tc-dock-tab active" data-tab="trang-chu">
+            <span class="tc-dock-tab-icon">🏠</span>
+            <span class="tc-dock-tab-label">Trang Chủ</span>
+          </button>
+          <button class="tc-dock-tab" data-tab="dang-le">
+            <span class="tc-dock-tab-icon">🪷</span>
+            <span class="tc-dock-tab-label">Dâng Lễ</span>
+          </button>
+          <button class="tc-dock-tab" data-tab="nghi-thuc">
+            <span class="tc-dock-tab-icon">📖</span>
+            <span class="tc-dock-tab-label">Nghi Thức</span>
+          </button>
+          <button class="tc-dock-tab" data-tab="nghe-chuong">
+            <span class="tc-dock-tab-icon">🔔</span>
+            <span class="tc-dock-tab-label">Nghe Chuông</span>
+          </button>
+          <button class="tc-dock-tab" data-tab="thien-dinh">
+            <span class="tc-dock-tab-icon">🧘</span>
+            <span class="tc-dock-tab-label">Thiền Định</span>
+          </button>
+          <button class="tc-dock-tab" data-tab="loi-phat-day">
+            <span class="tc-dock-tab-icon">📖</span>
+            <span class="tc-dock-tab-label">Lời Phật Dạy</span>
+          </button>
+          <button class="tc-dock-tab" data-tab="phat-tu">
+            <span class="tc-dock-tab-icon">👥</span>
+            <span class="tc-dock-tab-label">Phật Tử</span>
+          </button>
+          <button class="tc-dock-tab" data-tab="more">
+            <span class="tc-dock-tab-icon">⋯</span>
+            <span class="tc-dock-tab-label"></span>
+          </button>
+        </nav>
+
+        <!-- 12. CANVAS HIỆU ỨNG TƯƠNG TÁC (HOA SEN RƠI, HẠT VÀNG, SÓNG ÂM) -->
+        <canvas id="templeCanvas"></canvas>
+        <canvas id="temple3dCanvas" hidden aria-hidden="true"></canvas>
+
+        <!-- 13. CÁC PHẦN TỬ TƯƠNG THÍCH TRẠNG THÁI -->
+        <div id="statusCounters" style="display:none;">
+          <span id="statIncense">108</span>
+          <span id="statMerit">10,800</span>
+          <span id="statWoodenFish">360</span>
+        </div>
+
+        <!-- BANNER ĐẠI LỄ KIM LONG CHẦU PHẬT -->
+        <div class="grand-ceremony-banner" id="grandCeremonyBanner">
+          <div class="grand-title" id="grandTitle">🐉 ĐẠI LỄ KIM LONG CHẦU PHẬT 🐉</div>
+          <div class="grand-sub" id="grandSub">Công đức vô lượng: Đại Thí Chủ dâng lễ</div>
+        </div>
+
+        <!-- MODAL TỜ GIẢI QUẺ LINH XĂM -->
+        <div class="fortune-modal-overlay" id="fortuneModal">
+          <div class="fortune-scroll-card">
+            <div class="fortune-badge" id="fortuneRankBadge">THƯỢNG THƯỢNG CÁT</div>
+            <div class="fortune-heading" id="fortuneTitle">Quẻ Số 1 — Nhật Xuất Đông Phương</div>
+            <div class="fortune-devotee" id="fortuneDevotee">Thí chủ xin quẻ: Minh Tâm</div>
+            <div class="fortune-poem" id="fortunePoem"></div>
+            <div class="fortune-meaning" id="fortuneMeaning"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         BẢNG ĐIỀU KHIỂN NHANH RPC & GIẢ LẬP TRỰC TIẾP (ẨN KHI ?obs=1)
+         ==================================================================== -->
+    <aside class="quick-dock" id="quickDock">
+      <div class="dock-header">
+        <div class="dock-title">🎛️ Điều Khiển Live & RPC</div>
+        <a href="/admin" target="_blank" class="dock-link">Mở Admin Đầy Đủ ↗</a>
+      </div>
+
+      <div class="dock-section">
+        <div class="dock-section-title">🔊 Âm Thanh Chùa & Giọng Đọc Khấn</div>
+        <button class="dock-btn gold" id="btnUnlockAudio">
+          🔔 Bật Âm Thanh Chùa & Giọng Đọc
+        </button>
+        <div class="dock-grid-2">
+          <button class="dock-btn active-toggle" id="btnToggleTts">🎙️ Giọng Đọc: BẬT</button>
+          <button class="dock-btn active-toggle" id="btnToggleMusic">🎵 Nhạc Nền: BẬT</button>
+          <button class="dock-btn active-toggle" id="btnToggleSfx">✨ Hiệu Ứng: BẬT</button>
+        </div>
+        <div class="volume-control-row">
+          <div class="volume-label-line">
+            <span>🎵 Âm lượng Nhạc nền</span>
+            <strong id="valMusicVol">65%</strong>
+          </div>
+          <input type="range" id="sliderMusicVol" class="volume-slider" min="0" max="100" value="65" />
+        </div>
+        <div class="volume-control-row">
+          <div class="volume-label-line">
+            <span>🎙️ Âm lượng Giọng đọc</span>
+            <strong id="valTtsVol">95%</strong>
+          </div>
+          <input type="range" id="sliderTtsVol" class="volume-slider" min="0" max="100" value="95" />
+        </div>
+        <div class="volume-control-row">
+          <div class="volume-label-line">
+            <span>✨ Âm lượng Hiệu ứng</span>
+            <strong id="valSfxVol">80%</strong>
+          </div>
+          <input type="range" id="sliderSfxVol" class="volume-slider" min="0" max="100" value="80" />
+        </div>
+      </div>
+
+      <div class="dock-section">
+        <div class="dock-section-title">📡 Kết Nối PHÒNG TIKTOK LIVE</div>
+        <div class="dock-input-row">
+          <input type="text" id="inputTikTokUser" class="dock-input" value="@zenfacts_vn" placeholder="Nhập @username hoặc link TikTok Live..." />
+          <button class="dock-btn gold" id="btnConnectTikTok">Kết Nối</button>
+        </div>
+        <button class="dock-btn" id="btnToggleAutoSim">
+          🤖 Tự động Giả lập Người Xem: TẮT
+        </button>
+      </div>
+
+      <div class="dock-section">
+        <div class="dock-section-title">🙏 Kích Hoạt Nghi Thức Tương Tác (RPC)</div>
+        <input type="text" id="inputDevoteeName" class="dock-input" value="Quỳnh_Finn" placeholder="Tên người xem / Thí chủ..." />
+        <input type="text" id="inputDevoteeWish" class="dock-input" value="Cầu cho gia đình bình an, tài lộc hanh thông, vạn sự như ý" placeholder="Lời cầu nguyện..." />
+
+        <div class="dock-grid-2">
+          <button class="dock-btn gold" id="btnRpcIncense">🔥 Thắp 3 Nén Hương</button>
+          <button class="dock-btn" id="btnRpcLantern">🏮 Thả Đèn Hoa Đăng</button>
+          <button class="dock-btn" id="btnRpcWoodenFish">🪵 Gõ Mõ (+5)</button>
+          <button class="dock-btn" id="btnRpcBell">🔔 Thỉnh Chuông Chùa</button>
+          <button class="dock-btn" id="btnRpcFortune">🎋 Xin Xăm / Gieo Quẻ</button>
+          <button class="dock-btn" id="btnRpcGiftLotus">🪷 Dâng Hoa Sen Vàng</button>
+        </div>
+        <button class="dock-btn gold" id="btnRpcGrandCeremony">
+          🐉 Đại Lễ Kim Long Chầu Phật (Quà Lớn)
+        </button>
+      </div>
+
+      <div class="dock-section">
+        <div class="dock-section-title">📜 Nhật Ký Tương Tác Gần Nhất</div>
+        <div class="event-feed" id="eventFeed"></div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="/js/audio.js"></script>
+  <script src="/js/particles.js"></script>
+  <script type="module" src="/js/live.js"></script>
+  <script type="module" src="/js/temple-3d.js"></script>
+  <script type="module" src="/js/camera-controller.js"></script>
+  <script type="module" src="/js/gift-action-engine.js"></script>
+</body>
+</html>
