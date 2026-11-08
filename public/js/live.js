@@ -152,12 +152,12 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
 
     // Khuôn tọa độ chuẩn theo ảnh gốc ChatGPT & nét vẽ 2 line xanh của bạn:
     // Hàng xa nhất: y = 1205 (dưới bậc thờ, ngang vai/ngực Chủ Lễ)
-    // Hàng gần nhất: y = 1470 (ngang eo Chủ Lễ, dừng ngay phía trước đèn hoa sen giữa sàn)
-    // Tăng kích thước phật tử lên cao to, đĩnh đạc (scale: 0.32 ở xa -> 0.70 ở gần)
+    // Hàng gần nhất: y = 1465 (ngang eo Chủ Lễ, dừng ngay phía trước đèn hoa sen giữa sàn)
+    // Tăng kích thước phật tử cao to, đĩnh đạc và rõ nét hơn nữa (scale: 0.36 ở xa -> 0.82 ở gần)
     const yStart = 1205;
-    const yEnd = 1470;
-    const scaleStart = 0.32;
-    const scaleEnd = 0.70;
+    const yEnd = 1465;
+    const scaleStart = 0.36;
+    const scaleEnd = 0.82;
 
     for (let r = 0; r < rows; r++) {
       // Phối cảnh chiều sâu 3D phi tuyến tính: hàng ở xa nén mật độ lại, hàng ở gần mở rộng tự nhiên
@@ -174,7 +174,7 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
 
       // Cánh trái thảm đỏ: Toàn bộ Phật tử nằm hẳn ra phía NGOÀI (bên trái) line xanh
       const leftAisleX = Math.round(greenLeft - halfW - 18);
-      const leftOuterX = Math.round(145 - t * 85); // 145 -> 60 (ôm sát cột chùa gỗ bên trái)
+      const leftOuterX = Math.round(150 - t * 80); // 150 -> 70 (ôm sát cột chùa gỗ bên trái)
       for (let c = 0; c < colsPerSide; c++) {
         const colT = c / (colsPerSide - 1);
         const x = Math.round(leftAisleX - colT * (leftAisleX - leftOuterX));
@@ -200,7 +200,7 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
 
       // Cánh phải thảm đỏ: Toàn bộ Phật tử nằm hẳn ra phía NGOÀI (bên phải) line xanh
       const rightAisleX = Math.round(greenRight + halfW + 18);
-      const rightOuterX = Math.round(935 + t * 85); // 935 -> 1020 (ôm sát cột chùa gỗ bên phải)
+      const rightOuterX = Math.round(930 + t * 80); // 930 -> 1010 (ôm sát cột chùa gỗ bên phải)
       for (let c = 0; c < colsPerSide; c++) {
         const colT = c / (colsPerSide - 1);
         const x = Math.round(rightAisleX + colT * (rightOuterX - rightAisleX));
