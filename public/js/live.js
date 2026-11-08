@@ -222,6 +222,22 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
   }
   window.setHallDevoteeCount = setHallDevoteeCount;
 
+  const FEMALE_SPRITES = [
+    '/assets/devotees/devotee_f1.png',
+    '/assets/devotees/devotee_f2.png',
+    '/assets/devotees/devotee_f3.png',
+    '/assets/devotees/devotee_f4.png',
+    '/assets/devotees/devotee_f5.png'
+  ];
+
+  const MALE_SPRITES = [
+    '/assets/devotees/devotee_m1.png',
+    '/assets/devotees/devotee_m2.png',
+    '/assets/devotees/devotee_m3.png',
+    '/assets/devotees/devotee_m4.png',
+    '/assets/devotees/devotee_m5.png'
+  ];
+
   function renderCongregationHall(leaderboard = []) {
     if (!congregationHall) return;
     cachedLeaderboard = leaderboard;
@@ -259,7 +275,9 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
         showBadge = seat.isAisle || (hallViewers[idx].merit > 0);
       }
 
-      const spriteSrc = seat.isFemale ? '/assets/devotee_female.png' : '/assets/devotee_male.png';
+      // Chọn đa dạng 1 trong 5 kiểu nhân vật khác nhau để không bị trùng lặp
+      const variantIdx = (seat.row * 3 + seat.col + (seat.side === 'R' ? 2 : 0)) % 5;
+      const spriteSrc = seat.isFemale ? FEMALE_SPRITES[variantIdx] : MALE_SPRITES[variantIdx];
 
       const badgeHtml = (showBadge && displayName)
         ? `
