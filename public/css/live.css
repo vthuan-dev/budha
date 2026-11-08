@@ -90,105 +90,105 @@ body.obs-mode .stage-wrapper {
   pointer-events: none;
 }
 
-/* 1B. HỆ THỐNG HÀO QUANG ĐỨC PHẬT A DI ĐÀ — TỐI ƯU HÓA CPU (KHÔNG DÙNG FILTER:BLUR) */
+/* 1B. HỆ THỐNG HÀO QUANG ĐỘNG ĐỨC PHẬT A DI ĐÀ (TÂM X=540, Y=740) */
 .buddha-halo-system {
   position: absolute;
   left: 540px;
-  top: 260px;
-  width: 720px;
-  height: 720px;
+  top: 740px;
+  width: 500px;
+  height: 500px;
   transform: translate3d(-50%, -50%, 0);
-  z-index: 4;
+  z-index: 5;
   pointer-events: none;
-  /* Khoét tâm trong suốt tại vị trí khuôn mặt Đức Phật để mặt Ngài sắc nét 100% */
+  mix-blend-mode: screen;
+  /* Khoét tâm trong suốt tại vị trí khuôn mặt Đức Phật để dung nhan Ngài rõ nét 100% */
   mask-image: radial-gradient(
     circle at 50% 50%,
     transparent 0%,
     transparent 16%,
-    rgba(0, 0, 0, 0.75) 25%,
-    #000000 45%,
-    rgba(0, 0, 0, 0.4) 62%,
-    transparent 72%
+    rgba(0, 0, 0, 0.65) 26%,
+    #000000 42%,
+    rgba(0, 0, 0, 0.75) 62%,
+    transparent 78%
   );
   -webkit-mask-image: radial-gradient(
     circle at 50% 50%,
     transparent 0%,
     transparent 16%,
-    rgba(0, 0, 0, 0.75) 25%,
-    #000000 45%,
-    rgba(0, 0, 0, 0.4) 62%,
-    transparent 72%
+    rgba(0, 0, 0, 0.65) 26%,
+    #000000 42%,
+    rgba(0, 0, 0, 0.75) 62%,
+    transparent 78%
   );
-  opacity: 0.78;
-  transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
-.buddha-halo-system.flare {
-  opacity: 1;
-  transform: translate3d(-50%, -50%, 0) scale(1.06);
-}
-
-.halo-sunburst {
+.halo-glow-breathing {
   position: absolute;
   inset: 0;
   border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 248, 180, 0.85) 0%,
+    rgba(255, 210, 80, 0.62) 38%,
+    rgba(255, 160, 30, 0.28) 64%,
+    transparent 78%
+  );
+  animation: haloBreathingGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes haloBreathingGlow {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.88;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.halo-sunburst-rays {
+  position: absolute;
+  inset: -15px;
+  border-radius: 50%;
   background: repeating-conic-gradient(
     from 0deg,
-    rgba(255, 236, 150, 0.38) 0deg 5deg,
-    rgba(255, 195, 70, 0.04) 5deg 12deg,
-    rgba(255, 245, 190, 0.28) 12deg 16deg,
-    rgba(255, 180, 50, 0.02) 16deg 24deg
+    rgba(255, 250, 190, 0.65) 0deg 3.5deg,
+    rgba(255, 190, 60, 0.04) 3.5deg 9deg,
+    rgba(255, 235, 150, 0.55) 9deg 13deg,
+    rgba(255, 170, 40, 0.03) 13deg 18deg
   );
+  animation: haloRaysSpin 40s linear infinite;
   will-change: transform;
-  /* steps(180) giảm số lần cập nhật GPU xuống chỉ ~3 lần/giây mà vẫn mượt */
-  animation: haloSpinCw 60s steps(180) infinite;
 }
 
-.halo-counter-rays {
-  display: none;
-}
-
-.halo-pulse-ring {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 420px;
-  height: 420px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 238, 160, 0.55);
-  transform: translate3d(-50%, -50%, 0);
-  pointer-events: none;
-}
-.halo-pulse-ring.ring-2 {
-  width: 540px;
-  height: 540px;
-  border-color: rgba(255, 220, 120, 0.35);
-}
-
-.halo-dharma-svg {
-  position: absolute;
-  inset: 20px;
-  width: 680px;
-  height: 680px;
-}
-.dharma-wheel-outer {
-  transform-origin: 340px 340px;
-  will-change: transform;
-  animation: haloSpinCw 72s steps(180) infinite;
-}
-.dharma-wheel-inner {
-  transform-origin: 340px 340px;
-  will-change: transform;
-  animation: haloSpinCcw 48s steps(140) infinite;
-}
-
-@keyframes haloSpinCw {
+@keyframes haloRaysSpin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-@keyframes haloSpinCcw {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
+
+.halo-inner-shimmer {
+  position: absolute;
+  inset: 35px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 245, 190, 0.75);
+  box-shadow: 0 0 25px rgba(255, 220, 90, 0.9), inset 0 0 20px rgba(255, 205, 70, 0.55);
+  animation: haloShimmerPulse 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes haloShimmerPulse {
+  0% {
+    opacity: 0.45;
+    box-shadow: 0 0 15px rgba(255, 215, 80, 0.5), inset 0 0 10px rgba(255, 200, 60, 0.3);
+  }
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 38px rgba(255, 240, 130, 1), inset 0 0 28px rgba(255, 220, 90, 0.8);
+  }
 }
 
 /* Hào quang Đài Sen Vàng trên tay Đức Phật A Di Đà (x=540, y=502) */
