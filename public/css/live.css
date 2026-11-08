@@ -596,10 +596,10 @@ body.obs-mode .stage-wrapper {
 }
 
 .hall-seat .devotee-sprite {
-  width: 96px;
-  height: 131px;
+  width: 140px;
+  height: 190px;
   object-fit: contain;
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.65));
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.75));
   animation: devoteePraySway 3.8s ease-in-out infinite;
 }
 
@@ -615,29 +615,31 @@ body.obs-mode .stage-wrapper {
 .seat-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 1.5px 8px 1.5px 4px;
+  gap: 5px;
+  padding: 2.5px 10px 2.5px 6px;
   border-radius: 999px;
-  background: rgba(28, 10, 6, 0.94);
-  border: 1px solid rgba(255, 215, 110, 0.7);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.75);
-  margin-top: -6px;
+  background: linear-gradient(180deg, rgba(34, 12, 8, 0.96) 0%, rgba(18, 5, 3, 0.98) 100%);
+  border: 1.2px solid rgba(255, 215, 110, 0.85);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.85), inset 0 1px 2px rgba(255, 235, 160, 0.35);
+  margin-top: -12px;
   white-space: nowrap;
 }
 
 .seat-avatar {
-  width: 17px;
-  height: 17px;
+  width: 19px;
+  height: 19px;
   border-radius: 50%;
   background: #6b150e;
   border: 1px solid var(--gold-bright);
   color: var(--gold-bright);
-  font-size: 9.5px;
+  font-size: 11px;
   font-weight: 800;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  flex-shrink: 0;
+}
 }
 .seat-avatar img {
   width: 100%;

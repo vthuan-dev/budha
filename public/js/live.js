@@ -19,7 +19,9 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
   function fitStage() {
     if (!stageWrapper || !stage9x16) return;
     const rect = stageWrapper.getBoundingClientRect();
-    const scale = rect.width / 1080;
+    const scale = Math.min(rect.width / 1080, rect.height / 1920);
+    stageWrapper.style.width = `${Math.round(1080 * scale)}px`;
+    stageWrapper.style.height = `${Math.round(1920 * scale)}px`;
     stage9x16.style.transform = `scale(${scale})`;
   }
   window.addEventListener('resize', fitStage);
@@ -120,55 +122,90 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
   let cachedLeaderboard = [];
   const ALL_HALL_SEATS = [];
 
-  const DEFAULT_DEVOTEE_NAMES = [
-    'Minh Tâm', 'Diệu Hạnh', 'Quang Phúc', 'Thanh Mai', 'An Nhiên', 'Thiện Đức',
-    'Bảo Ngọc', 'Tuệ Lâm', 'Ngọc Hân', 'Thuận Hòa', 'Hồng Phúc', 'Vạn An',
-    'Kim Oanh', 'Đức Thịnh', 'Gia Huy', 'Tâm Nguyện', 'Trí Dũng', 'Diệu Âm',
-    'Phước Lộc', 'Thanh Tịnh', 'Bình An', 'Như Ý', 'Tâm An', 'Liên Hoa',
-    'Chí Thiện', 'Diệu Quang', 'Đại Nghĩa', 'Bảo Trâm', 'Vĩnh Khang', 'Tuệ Minh',
-    'Hải Đăng', 'Nguyên Thảo', 'Quốc Bảo', 'Xuân Mai', 'Tùng Lâm', 'Hương Giang',
-    'Minh Triết', 'Ngọc Lan', 'Thái Sơn', 'Cẩm Tú', 'Hoàng Long', 'Thảo Nguyên',
-    'Đức Huy', 'Yến Nhi', 'Minh Khôi', 'Khánh Linh', 'Nhật Minh', 'Hà Phương',
-    'Khánh Vân', 'Tường Vy', 'Quỳnh Anh', 'Thục Quyên', 'Gia Bảo', 'Đăng Khoa',
-    'Phúc Thịnh', 'Minh An', 'Hoàng Quân', 'Ánh Tuyết', 'Mỹ Linh', 'Trọng Hiếu'
+  // Danh sách 16 Phật tử quỳ dọc 2 mép thảm đỏ chuẩn theo thiết kế Chùa Thiên Cảnh
+  const AISLE_NAMES_LEFT = [
+    { name: 'Minh Tâm', icon: '🌸' },
+    { name: 'Diệu Hạnh', icon: '🌸' },
+    { name: 'Quang Phúc', icon: '🙏' },
+    { name: 'Thanh Mai', icon: '🌸' },
+    { name: 'An Nhiên', icon: '🙏' },
+    { name: 'Thiện Đức', icon: '🌸' },
+    { name: 'Bảo Ngọc', icon: '🙏' },
+    { name: 'Tuệ Lâm', icon: '🌸' }
+  ];
+
+  const AISLE_NAMES_RIGHT = [
+    { name: 'Ngọc Hân', icon: '🌸' },
+    { name: 'Thuận Hòa', icon: '🙏' },
+    { name: 'Hồng Phúc', icon: '🌸' },
+    { name: 'Vạn An', icon: '🙏' },
+    { name: 'Kim Oanh', icon: '🌸' },
+    { name: 'Đức Thịnh', icon: '🙏' },
+    { name: 'Gia Huy', icon: '🌸' },
+    { name: 'Tâm Nguyện', icon: '🙏' }
   ];
 
   (function buildHallGrid60() {
-    const rows = 6;
-    const colsPerSide = 5;
+    const rows = 8;
+    const colsPerSide = 4;
     const rawSeats = [];
 
     for (let r = 0; r < rows; r++) {
       const progress = r / (rows - 1); // 0 (xa gần ban thờ) -> 1 (gần camera)
-      const y = Math.round(1120 + progress * 520); // 1120 -> 1640
-      const scale = +(0.36 + progress * 0.52).toFixed(2); // 0.36 -> 0.88
+      const y = Math.round(1060 + progress * 720); // 1060 -> 1780
+      const scale = +(0.32 + progress * 0.58).toFixed(2); // 0.32 -> 0.90
 
-      // Cánh trái thảm đỏ (5 cột mở rộng phối cảnh)
-      const leftInnerX = Math.round(380 - progress * 150);
-      const leftOuterX = Math.round(120 - progress * 70);
+      // Cánh trái thảm đỏ (từ mép hoa sen lan tỏa sang cột gỗ)
+      const leftAisleX = Math.round(440 - progress * 210);
+      const leftPillarX = Math.round(180 - progress * 150);
       for (let c = 0; c < colsPerSide; c++) {
         const t = c / (colsPerSide - 1);
-        const x = Math.round(leftOuterX + t * (leftInnerX - leftOuterX));
+        const x = Math.round(leftAisleX - t * (leftAisleX - leftPillarX));
         const isFemale = ((r + c) % 2 === 0);
-        // Ưu tiên cột gần lối đi thảm đỏ (c=4 là sát thảm đỏ nhất)
-        const priority = (4 - c) * 10 + Math.abs(r - 2);
-        rawSeats.push({ side: 'L', row: r, col: c, x, y, scale, isFemale, priority });
+        const isAisle = (c === 0);
+        // Ưu tiên hàng sát lối đi trước (c=0), tỏa dần sang ngoài
+        const priority = c * 100 + r * 2;
+        const defaultInfo = (isAisle && AISLE_NAMES_LEFT[r]) ? AISLE_NAMES_LEFT[r] : null;
+        rawSeats.push({
+          side: 'L',
+          row: r,
+          col: c,
+          x,
+          y,
+          scale,
+          isFemale,
+          isAisle,
+          defaultInfo,
+          priority
+        });
       }
 
-      // Cánh phải thảm đỏ (5 cột mở rộng phối cảnh)
-      const rightInnerX = Math.round(700 + progress * 150);
-      const rightOuterX = Math.round(960 + progress * 70);
+      // Cánh phải thảm đỏ (từ mép hoa sen lan tỏa sang cột gỗ)
+      const rightAisleX = Math.round(640 + progress * 210);
+      const rightPillarX = Math.round(900 + progress * 150);
       for (let c = 0; c < colsPerSide; c++) {
         const t = c / (colsPerSide - 1);
-        const x = Math.round(rightInnerX + t * (rightOuterX - rightInnerX));
+        const x = Math.round(rightAisleX + t * (rightPillarX - rightAisleX));
         const isFemale = ((r + c) % 2 !== 0);
-        // Ưu tiên cột gần lối đi thảm đỏ (c=0 là sát thảm đỏ nhất)
-        const priority = c * 10 + Math.abs(r - 2);
-        rawSeats.push({ side: 'R', row: r, col: c, x, y, scale, isFemale, priority });
+        const isAisle = (c === 0);
+        const priority = c * 100 + r * 2 + 1;
+        const defaultInfo = (isAisle && AISLE_NAMES_RIGHT[r]) ? AISLE_NAMES_RIGHT[r] : null;
+        rawSeats.push({
+          side: 'R',
+          row: r,
+          col: c,
+          x,
+          y,
+          scale,
+          isFemale,
+          isAisle,
+          defaultInfo,
+          priority
+        });
       }
     }
 
-    // Sắp xếp thứ tự ưu tiên lấp chỗ ngồi: sát lối đi trước, từ hàng giữa tỏa đều
+    // Sắp xếp thứ tự ưu tiên lấp chỗ ngồi: hàng lối đi (c=0) trước, đối xứng trái phải
     rawSeats.sort((a, b) => a.priority - b.priority);
     ALL_HALL_SEATS.push(...rawSeats);
   })();
@@ -183,6 +220,7 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
       renderCongregationHall(cachedLeaderboard);
     }
   }
+  window.setHallDevoteeCount = setHallDevoteeCount;
 
   function renderCongregationHall(leaderboard = []) {
     if (!congregationHall) return;
@@ -198,45 +236,53 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
       return;
     }
 
-    // Chọn đúng số lượng Phật tử được cấu hình và sắp xếp theo chiều sâu Y để render z-index chuẩn
+    // Lấy đúng số lượng Phật tử được cấu hình
     const activeSeats = ALL_HALL_SEATS.slice(0, currentDevoteeCount);
+    // Sắp xếp theo chiều sâu Y để render z-index chuẩn (người ngồi trước che người ngồi sau)
     activeSeats.sort((a, b) => a.y - b.y);
 
-    const seatViewerMap = new Map();
-    activeSeats.forEach((seat, idx) => {
-      if (hallViewers[idx]) {
-        seatViewerMap.set(idx, hallViewers[idx]);
-      } else if (DEFAULT_DEVOTEE_NAMES[idx]) {
-        seatViewerMap.set(idx, {
-          name: DEFAULT_DEVOTEE_NAMES[idx],
-          isDefault: true
-        });
-      }
-    });
-
     congregationHall.innerHTML = activeSeats.map((seat, idx) => {
-      const viewer = seatViewerMap.get(idx);
-      const spriteSrc = seat.isFemale ? '/assets/devotee_female.png' : '/assets/devotee_male.png';
-      const icon = seat.isFemale ? '🌸' : '🙏';
+      let displayName = '';
+      let displayIcon = seat.isFemale ? '🌸' : '🙏';
+      let avatarUrl = '';
+      let showBadge = seat.isAisle; // Mặc định chỉ hàng lối đi mới hiển thị thẻ tên (tránh đè nhau)
 
-      const badgeHtml = viewer
+      if (seat.isAisle && seat.defaultInfo) {
+        displayName = seat.defaultInfo.name;
+        displayIcon = seat.defaultInfo.icon;
+      }
+
+      // Nếu có người xem thực tế từ leaderboard, ưu tiên gắn
+      if (hallViewers[idx]) {
+        displayName = hallViewers[idx].name;
+        if (hallViewers[idx].avatar) avatarUrl = hallViewers[idx].avatar;
+        showBadge = seat.isAisle || (hallViewers[idx].merit > 0);
+      }
+
+      const spriteSrc = seat.isFemale ? '/assets/devotee_female.png' : '/assets/devotee_male.png';
+
+      const badgeHtml = (showBadge && displayName)
         ? `
-          <div class="seat-badge">
+          <div class="seat-badge ${seat.side === 'L' ? 'seat-badge-left' : 'seat-badge-right'}">
             <span class="seat-avatar">${
-              viewer.avatar
-                ? `<img src="${escapeHtml(viewer.avatar)}" alt="" />`
-                : icon
+              avatarUrl
+                ? `<img src="${escapeHtml(avatarUrl)}" alt="" />`
+                : displayIcon
             }</span>
-            <span class="seat-username">${escapeHtml(shortenName(viewer.name, 10))}</span>
+            <span class="seat-username">${escapeHtml(shortenName(displayName, 11))}</span>
           </div>
         `
         : '';
 
+      const zIndex = 10 + Math.round((seat.y - 1000) / 10);
+
       return `
         <div
           class="hall-seat"
-          data-seat-idx="${idx}"
-          style="left: ${seat.x}px; top: ${seat.y}px; z-index: ${10 + seat.row * 2}; transform: translate(-50%, -100%) scale(${seat.scale});"
+          data-seat-side="${seat.side}"
+          data-seat-col="${seat.col}"
+          data-seat-row="${seat.row}"
+          style="left: ${seat.x}px; top: ${seat.y}px; z-index: ${zIndex}; transform: translate(-50%, -100%) scale(${seat.scale});"
         >
           <img
             src="${spriteSrc}"
