@@ -150,10 +150,10 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
     const colsPerSide = 4;
     const rawSeats = [];
 
-    const yStart = 1060; // Hàng xa nhất (dưới bậc ban thờ, trên sàn gỗ)
-    const yEnd = 1580;   // Hàng gần nhất (ngang hông đệm tròn Chủ Lễ, giữ thảm đỏ thông thoáng)
+    const yStart = 1220; // Hàng xa nhất (hạ thấp xuống ngang hông Chủ Lễ, cách xa ban thờ Phật)
+    const yEnd = 1680;   // Hàng gần nhất (ngang chân đệm Chủ Lễ, giữ thảm đỏ thông thoáng)
     const scaleStart = 0.25;
-    const scaleEnd = 0.65;
+    const scaleEnd = 0.72;
 
     for (let r = 0; r < rows; r++) {
       // Phối cảnh chiều sâu 3D phi tuyến tính: hàng ở xa nén mật độ lại, hàng ở gần mở rộng tự nhiên
@@ -169,8 +169,8 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
       const greenRight = 130.86 + 0.4709 * y;
 
       // Cánh trái thảm đỏ: Toàn bộ Phật tử nằm hẳn ra phía NGOÀI (bên trái) line xanh
-      const leftAisleX = Math.round(greenLeft - halfW - 12);
-      const leftOuterX = Math.round(140 - t * 90); // 140 -> 50
+      const leftAisleX = Math.round(greenLeft - halfW - 14);
+      const leftOuterX = Math.round(110 - t * 70); // 110 -> 40
       for (let c = 0; c < colsPerSide; c++) {
         const colT = c / (colsPerSide - 1);
         const x = Math.round(leftAisleX - colT * (leftAisleX - leftOuterX));
@@ -194,8 +194,8 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
       }
 
       // Cánh phải thảm đỏ: Toàn bộ Phật tử nằm hẳn ra phía NGOÀI (bên phải) line xanh
-      const rightAisleX = Math.round(greenRight + halfW + 12);
-      const rightOuterX = Math.round(940 + t * 90); // 940 -> 1030
+      const rightAisleX = Math.round(greenRight + halfW + 14);
+      const rightOuterX = Math.round(970 + t * 70); // 970 -> 1040
       for (let c = 0; c < colsPerSide; c++) {
         const colT = c / (colsPerSide - 1);
         const x = Math.round(rightAisleX + colT * (rightOuterX - rightAisleX));
