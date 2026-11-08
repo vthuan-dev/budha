@@ -74,3 +74,4 @@ if bbox:
 # Save to destination
 pil_img.save(dest_path, 'PNG')
 print(f"Saved transparent sprite: {dest_path} (Final Size: {pil_img.size})")
+
