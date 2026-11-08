@@ -114,70 +114,90 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
     }).join('');
   }
 
-  // 5. Dựng Đạo Tràng 40 Phật Tử Quỳ Lễ Hai Bên Thảm Đỏ (5 Hàng x 4 Cột mỗi bên)
+  // 5. Dựng Đạo Tràng 48 Phật Tử Quỳ Lễ Hai Bên Thảm Đỏ (6 Hàng x 4 Cột mỗi bên, Xen kẽ Nam - Nữ)
   const congregationHall = document.getElementById('congregationHall');
   const HALL_SEAT_COORDS = [];
 
+  const DEFAULT_DEVOTEE_NAMES = [
+    'Minh Tâm', 'Diệu Hạnh', 'Quang Phúc', 'Thanh Mai', 'An Nhiên', 'Thiện Đức',
+    'Bảo Ngọc', 'Tuệ Lâm', 'Ngọc Hân', 'Thuận Hòa', 'Hồng Phúc', 'Vạn An',
+    'Kim Oanh', 'Đức Thịnh', 'Gia Huy', 'Tâm Nguyện', 'Trí Dũng', 'Diệu Âm',
+    'Phước Lộc', 'Thanh Tịnh', 'Bình An', 'Như Ý', 'Tâm An', 'Liên Hoa'
+  ];
+
   (function buildHallGrid() {
-    const rows = 5;
+    const rows = 6;
     const colsPerSide = 4;
     for (let r = 0; r < rows; r++) {
       const progress = r / (rows - 1); // 0 (xa) -> 1 (gần)
-      const y = Math.round(1290 + progress * 355); // 1290 -> 1645
-      const scale = +(0.76 + progress * 0.28).toFixed(2);
+      const y = Math.round(1160 + progress * 480); // 1160 -> 1640
+      const scale = +(0.40 + progress * 0.48).toFixed(2); // 0.40 -> 0.88
 
-      // Cánh trái thảm đỏ
-      const leftInnerX = Math.round(335 - progress * 48); // mép thảm mở rộng dần
-      const leftOuterX = 48;
+      // Cánh trái thảm đỏ (4 cột mở rộng phối cảnh)
+      const leftInnerX = Math.round(410 - progress * 140);
+      const leftOuterX = Math.round(140 - progress * 80);
       for (let c = 0; c < colsPerSide; c++) {
         const t = c / (colsPerSide - 1);
         const x = Math.round(leftOuterX + t * (leftInnerX - leftOuterX));
-        HALL_SEAT_COORDS.push({ side: 'L', row: r, col: c, x, y, scale });
+        const isFemale = ((r + c) % 2 === 0);
+        HALL_SEAT_COORDS.push({ side: 'L', row: r, col: c, x, y, scale, isFemale });
       }
 
-      // Cánh phải thảm đỏ
-      const rightInnerX = Math.round(745 + progress * 48);
-      const rightOuterX = 1032;
+      // Cánh phải thảm đỏ (4 cột mở rộng phối cảnh)
+      const rightInnerX = Math.round(670 + progress * 140);
+      const rightOuterX = Math.round(940 + progress * 80);
       for (let c = 0; c < colsPerSide; c++) {
         const t = c / (colsPerSide - 1);
         const x = Math.round(rightInnerX + t * (rightOuterX - rightInnerX));
-        HALL_SEAT_COORDS.push({ side: 'R', row: r, col: c, x, y, scale });
+        const isFemale = ((r + c) % 2 !== 0);
+        HALL_SEAT_COORDS.push({ side: 'R', row: r, col: c, x, y, scale, isFemale });
       }
     }
+
+    // Sắp xếp thứ tự render theo chiều sâu Y (ở xa vẽ trước, ở gần vẽ sau)
+    HALL_SEAT_COORDS.sort((a, b) => a.y - b.y);
   })();
 
   let lastRenderedLeaderboardJson = '';
 
   function renderCongregationHall(leaderboard = []) {
     if (!congregationHall) return;
-    // Những người xếp từ hạng 7 trở đi ngồi ở các vị trí đầu tiên cạnh thảm đỏ
     const hallViewers = leaderboard.slice(6);
     const sig = JSON.stringify(hallViewers.map((d) => `${d.name}:${d.merit}`));
     if (sig === lastRenderedLeaderboardJson && congregationHall.children.length > 0) return;
     lastRenderedLeaderboardJson = sig;
 
-    // Ưu tiên gắn thẻ tên vào các ghế gần thảm đỏ dễ nhìn nhất
+    // Các vị trí ghế ưu tiên gắn thẻ tên (dọc lối đi thảm đỏ và hàng mặt tiền)
     const labeledSeatIndices = [
-      3, 4, 11, 12, 19, 20, 27, 28, 35, 36, 2, 5, 10, 13, 18, 21, 26, 29
+      3, 4, 11, 12, 19, 20, 27, 28, 35, 36, 43, 44,
+      2, 5, 10, 13, 18, 21, 26, 29, 34, 37, 42, 45
     ];
     const seatViewerMap = new Map();
-    hallViewers.forEach((viewer, idx) => {
-      if (idx < labeledSeatIndices.length) {
-        seatViewerMap.set(labeledSeatIndices[idx], viewer);
+    labeledSeatIndices.forEach((seatIdx, i) => {
+      if (hallViewers[i]) {
+        seatViewerMap.set(seatIdx, hallViewers[i]);
+      } else if (DEFAULT_DEVOTEE_NAMES[i]) {
+        seatViewerMap.set(seatIdx, {
+          name: DEFAULT_DEVOTEE_NAMES[i],
+          isDefault: true
+        });
       }
     });
 
     congregationHall.innerHTML = HALL_SEAT_COORDS.map((seat, idx) => {
       const viewer = seatViewerMap.get(idx);
+      const spriteSrc = seat.isFemale ? '/assets/devotee_female.png' : '/assets/devotee_male.png';
+      const icon = seat.isFemale ? '🌸' : '🙏';
+
       const badgeHtml = viewer
         ? `
           <div class="seat-badge">
             <span class="seat-avatar">${
               viewer.avatar
                 ? `<img src="${escapeHtml(viewer.avatar)}" alt="" />`
-                : escapeHtml(String(viewer.name || 'P').charAt(0).toUpperCase())
+                : icon
             }</span>
-            <span class="seat-username">${escapeHtml(shortenName(viewer.name, 11))}</span>
+            <span class="seat-username">${escapeHtml(shortenName(viewer.name, 10))}</span>
           </div>
         `
         : '';
@@ -186,19 +206,22 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
         <div
           class="hall-seat"
           data-seat-idx="${idx}"
-          style="left: ${seat.x}px; top: ${seat.y}px; z-index: ${20 + seat.row * 2}; transform: translate(-50%, -100%) scale(${seat.scale});"
+          style="left: ${seat.x}px; top: ${seat.y}px; z-index: ${10 + seat.row * 2}; transform: translate(-50%, -100%) scale(${seat.scale});"
         >
           <img
-            src="/assets/devotee.png"
-            alt="Phật tử"
+            src="${spriteSrc}"
+            alt="${seat.isFemale ? 'Nữ Phật tử' : 'Nam Phật tử'}"
             class="devotee-sprite"
-            style="animation-delay: ${((idx * 0.27) % 3.5).toFixed(2)}s;"
+            style="animation-delay: ${((idx * 0.22) % 3.6).toFixed(2)}s;"
           />
           ${badgeHtml}
         </div>
       `;
     }).join('');
   }
+
+  // Khởi tạo ngay 48 vị trí đạo tràng Phật tử khi tải trang
+  renderCongregationHall();
 
   // Preload toàn bộ 8 frame nhân vật vào bộ nhớ để chuyển frame mượt 0ms
   const SPRITE_FRAMES = {

@@ -1,5 +1,9 @@
 node_modules/
 .venv/
+.env
+*.env
+__pycache__/
+*.pyc
 data/
 dist/
 embedded-assets.js
@@ -7,3 +11,10 @@ embedded-assets.js
 *.log
 *.m4a
 public/assets/bg_chant.m4a
+test_*.png
+crop_*.jpg
+verify_*.jpg
+public/assets/test_*.jpg
+
+
+

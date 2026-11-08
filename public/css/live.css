@@ -576,11 +576,11 @@ body.obs-mode .stage-wrapper {
   text-overflow: ellipsis;
 }
 
-/* 6. ĐẠO TRÀNG NGƯỜI XEM QUỲ LỄ HAI BÊN THẢM ĐỎ (40 CHỖ NGỒI TĨNH SIÊU NHẸ CPU) */
+/* 6. ĐẠO TRÀNG PHẬT TỬ NHÂN BẢN HAI BÊN THẢM ĐỎ (48 CHỖ NGỒI PHỐI CẢNH 3D) */
 .congregation-hall {
   position: absolute;
   inset: 0;
-  z-index: 11;
+  z-index: 12;
   pointer-events: none;
   contain: layout style;
 }
@@ -590,33 +590,49 @@ body.obs-mode .stage-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
+  pointer-events: none;
+  contain: layout style;
+  will-change: transform;
 }
 
 .hall-seat .devotee-sprite {
-  width: 92px;
-  height: 120px;
+  width: 96px;
+  height: 131px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.65));
+  animation: devoteePraySway 3.8s ease-in-out infinite;
+}
+
+@keyframes devoteePraySway {
+  0%, 100% {
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    transform: translateY(-3px) scaleY(1.02);
+  }
 }
 
 .seat-badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 2px 8px 2px 3px;
+  gap: 4px;
+  padding: 1.5px 8px 1.5px 4px;
   border-radius: 999px;
-  background: rgba(12, 4, 3, 0.92);
-  border: 1px solid rgba(244, 193, 80, 0.68);
-  margin-top: -12px;
+  background: rgba(28, 10, 6, 0.94);
+  border: 1px solid rgba(255, 215, 110, 0.7);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.75);
+  margin-top: -6px;
   white-space: nowrap;
 }
 
 .seat-avatar {
-  width: 19px;
-  height: 19px;
+  width: 17px;
+  height: 17px;
   border-radius: 50%;
   background: #6b150e;
   border: 1px solid var(--gold-bright);
   color: var(--gold-bright);
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 800;
   display: inline-flex;
   align-items: center;
@@ -633,9 +649,10 @@ body.obs-mode .stage-wrapper {
   font-size: 11.5px;
   font-weight: 700;
   color: #fff6e5;
-  max-width: 78px;
+  max-width: 82px;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: 0.2px;
 }
 
 /* 7. NGƯỜI XEM ĐI BỘ DỌC THẢM ĐỎ LÊN DÂNG HƯƠNG (GPU TRANSFORM3D) */
@@ -2871,43 +2888,73 @@ body.obs-mode .stage-wrapper {
   font-weight: 600;
 }
 
-/* 4. CENTER BADGES: CHỦ LỄ & ĐANG CHỜ DÂNG LỄ */
+/* 4. CENTER BADGES & CHỦ LỄ */
 .tc-center-waiting-pill {
   position: absolute;
-  top: 1025px;
+  top: 1085px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 6px 30px;
+  padding: 5px 28px;
   background: linear-gradient(90deg, rgba(80, 32, 10, 0.92), rgba(145, 65, 16, 0.95), rgba(80, 32, 10, 0.92));
   border: 1.8px solid #ffe17d;
   border-radius: 999px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7), 0 0 18px rgba(255, 195, 60, 0.5);
   color: #ffffff;
-  font-size: 17.5px;
+  font-size: 16.5px;
   font-weight: 800;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
-  z-index: 20;
+  z-index: 22;
   white-space: nowrap;
 }
-.tc-chule-badge {
+
+.tc-chule-container {
   position: absolute;
-  top: 1095px;
-  left: 50%;
+  left: 540px;
+  top: 1145px;
   transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 16;
+  pointer-events: none;
+}
+
+.tc-chule-sprite {
+  width: 172px;
+  height: auto;
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.75));
+  animation: chuleBreathing 4.5s ease-in-out infinite;
+}
+
+@keyframes chuleBreathing {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.015);
+  }
+}
+
+.tc-chule-badge {
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  margin-top: -14px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 5px 20px;
+  gap: 8px;
+  padding: 4px 18px;
   background: linear-gradient(135deg, rgba(165, 25, 18, 0.94), rgba(95, 12, 8, 0.96));
   border: 1.8px solid #ffd875;
-  border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.75), 0 0 16px rgba(255, 200, 90, 0.5);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.75), 0 0 16px rgba(255, 200, 90, 0.5);
   z-index: 20;
   white-space: nowrap;
 }
