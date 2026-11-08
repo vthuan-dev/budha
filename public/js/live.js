@@ -150,17 +150,23 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
     const colsPerSide = 4;
     const rawSeats = [];
 
-    for (let r = 0; r < rows; r++) {
-      const progress = r / (rows - 1); // 0 (xa gần ban thờ) -> 1 (gần camera)
-      const y = Math.round(1060 + progress * 720); // 1060 -> 1780
-      const scale = +(0.32 + progress * 0.58).toFixed(2); // 0.32 -> 0.90
+    const yStart = 1200; // Hàng xa nhất (bên hông Chủ Lễ, đặt vững trên sàn gỗ, không trèo lên ban thờ)
+    const yEnd = 1780;   // Hàng gần nhất (tiền cảnh góc camera)
+    const scaleStart = 0.28;
+    const scaleEnd = 0.88;
 
-      // Cánh trái thảm đỏ (từ mép hoa sen lan tỏa sang cột gỗ)
-      const leftAisleX = Math.round(440 - progress * 210);
-      const leftPillarX = Math.round(180 - progress * 150);
+    for (let r = 0; r < rows; r++) {
+      // Phối cảnh 3D chiều sâu: các hàng ở xa nén mật độ lại, hàng ở gần mở rộng tự nhiên
+      const t = Math.pow(r / (rows - 1), 1.6);
+      const y = Math.round(yStart + t * (yEnd - yStart));
+      const scale = +(scaleStart + t * (scaleEnd - scaleStart)).toFixed(2);
+
+      // Cánh trái thảm đỏ (mở rộng theo nón phối cảnh sàn gỗ)
+      const leftAisleX = Math.round(415 - t * 185);   // 415 -> 230
+      const leftPillarX = Math.round(190 - t * 160);  // 190 -> 30
       for (let c = 0; c < colsPerSide; c++) {
-        const t = c / (colsPerSide - 1);
-        const x = Math.round(leftAisleX - t * (leftAisleX - leftPillarX));
+        const colT = c / (colsPerSide - 1);
+        const x = Math.round(leftAisleX - colT * (leftAisleX - leftPillarX));
         const isFemale = ((r + c) % 2 === 0);
         const isAisle = (c === 0);
         // Ưu tiên hàng sát lối đi trước (c=0), tỏa dần sang ngoài
@@ -180,12 +186,12 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
         });
       }
 
-      // Cánh phải thảm đỏ (từ mép hoa sen lan tỏa sang cột gỗ)
-      const rightAisleX = Math.round(640 + progress * 210);
-      const rightPillarX = Math.round(900 + progress * 150);
+      // Cánh phải thảm đỏ (mở rộng theo nón phối cảnh sàn gỗ)
+      const rightAisleX = Math.round(665 + t * 185);  // 665 -> 850
+      const rightPillarX = Math.round(890 + t * 160); // 890 -> 1050
       for (let c = 0; c < colsPerSide; c++) {
-        const t = c / (colsPerSide - 1);
-        const x = Math.round(rightAisleX + t * (rightPillarX - rightAisleX));
+        const colT = c / (colsPerSide - 1);
+        const x = Math.round(rightAisleX + colT * (rightPillarX - rightAisleX));
         const isFemale = ((r + c) % 2 !== 0);
         const isAisle = (c === 0);
         const priority = c * 100 + r * 2 + 1;
