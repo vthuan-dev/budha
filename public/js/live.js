@@ -116,9 +116,9 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
     }).join('');
   }
 
-  // 5. Dựng Đạo Tràng 60 Phật Tử Quỳ Lễ Hai Bên Thảm Đỏ (Có thể tăng giảm tùy ý từ 0 - 60 người)
+  // 5. Dựng Đạo Tràng 64 Phật Tử Quỳ Lễ Hai Bên Thảm Đỏ (Có thể tăng giảm tùy ý từ 0 - 64 người)
   const congregationHall = document.getElementById('congregationHall');
-  let currentDevoteeCount = 24;
+  let currentDevoteeCount = 48;
   let cachedLeaderboard = [];
   const ALL_HALL_SEATS = [];
 
@@ -145,19 +145,23 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
     { name: 'Tâm Nguyện', icon: '🙏' }
   ];
 
-  (function buildHallGrid60() {
+  (function buildHallGrid64() {
     const rows = 8;
     const colsPerSide = 4;
     const rawSeats = [];
 
-    const yStart = 1220; // Hàng xa nhất (hạ thấp xuống ngang hông Chủ Lễ, cách xa ban thờ Phật)
-    const yEnd = 1680;   // Hàng gần nhất (ngang chân đệm Chủ Lễ, giữ thảm đỏ thông thoáng)
+    // Khuôn tọa độ chuẩn theo ảnh gốc ChatGPT & nét vẽ 2 line xanh của bạn:
+    // Hàng xa nhất: y = 1210 (dưới bậc thờ, ngang vai/ngực Chủ Lễ)
+    // Hàng gần nhất: y = 1485 (ngang eo Chủ Lễ, ngay sau hàng đèn hoa sen giữa sàn)
+    // Giữ trọn vẹn tà áo xòe trắng, đệm bồ đoàn hoa sen và thảm đỏ hoa sen phía trước thông thoáng, tôn nghiêm
+    const yStart = 1210;
+    const yEnd = 1485;
     const scaleStart = 0.25;
-    const scaleEnd = 0.72;
+    const scaleEnd = 0.50;
 
     for (let r = 0; r < rows; r++) {
       // Phối cảnh chiều sâu 3D phi tuyến tính: hàng ở xa nén mật độ lại, hàng ở gần mở rộng tự nhiên
-      const t = Math.pow(r / (rows - 1), 1.35);
+      const t = Math.pow(r / (rows - 1), 1.1);
       const y = Math.round(yStart + t * (yEnd - yStart));
       const scale = +(scaleStart + t * (scaleEnd - scaleStart)).toFixed(2);
       const halfW = Math.round(120 * scale / 2);
@@ -169,15 +173,16 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
       const greenRight = 130.86 + 0.4709 * y;
 
       // Cánh trái thảm đỏ: Toàn bộ Phật tử nằm hẳn ra phía NGOÀI (bên trái) line xanh
-      const leftAisleX = Math.round(greenLeft - halfW - 14);
-      const leftOuterX = Math.round(110 - t * 70); // 110 -> 40
+      const leftAisleX = Math.round(greenLeft - halfW - 18);
+      const leftOuterX = Math.round(140 - t * 75); // 140 -> 65 (ôm sát cột chùa gỗ bên trái)
       for (let c = 0; c < colsPerSide; c++) {
         const colT = c / (colsPerSide - 1);
         const x = Math.round(leftAisleX - colT * (leftAisleX - leftOuterX));
         const isFemale = ((r + c) % 2 === 0);
         const isAisle = (c === 0);
-        // Ưu tiên hàng sát lối đi trước (c=0), tỏa dần sang ngoài
-        const priority = c * 100 + r * 2;
+        // Thứ tự ưu tiên lấp chỗ ngồi: Cột sát lối đi (c=0) -> Cột 1 -> Cột 2 -> Cột 3 (sát cột gỗ)
+        // Mỗi hàng mở rộng dần ra phía ngoài cột chùa, luôn cân đối cả 2 cánh
+        const priority = c * 16 + r * 2;
         const defaultInfo = (isAisle && AISLE_NAMES_LEFT[r]) ? AISLE_NAMES_LEFT[r] : null;
         rawSeats.push({
           side: 'L',
@@ -194,14 +199,14 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
       }
 
       // Cánh phải thảm đỏ: Toàn bộ Phật tử nằm hẳn ra phía NGOÀI (bên phải) line xanh
-      const rightAisleX = Math.round(greenRight + halfW + 14);
-      const rightOuterX = Math.round(970 + t * 70); // 970 -> 1040
+      const rightAisleX = Math.round(greenRight + halfW + 18);
+      const rightOuterX = Math.round(940 + t * 75); // 940 -> 1015 (ôm sát cột chùa gỗ bên phải)
       for (let c = 0; c < colsPerSide; c++) {
         const colT = c / (colsPerSide - 1);
         const x = Math.round(rightAisleX + colT * (rightOuterX - rightAisleX));
         const isFemale = ((r + c) % 2 !== 0);
         const isAisle = (c === 0);
-        const priority = c * 100 + r * 2 + 1;
+        const priority = c * 16 + r * 2 + 1;
         const defaultInfo = (isAisle && AISLE_NAMES_RIGHT[r]) ? AISLE_NAMES_RIGHT[r] : null;
         rawSeats.push({
           side: 'R',
@@ -226,7 +231,7 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
   let lastRenderedSig = '';
 
   function setHallDevoteeCount(count) {
-    const num = Math.max(0, Math.min(60, Number(count) ?? 24));
+    const num = Math.max(0, Math.min(64, Number(count) ?? 48));
     if (num !== currentDevoteeCount) {
       currentDevoteeCount = num;
       lastRenderedSig = '';

@@ -173,18 +173,18 @@
       </section>
 
       <section class="card">
-        <h2>👥 3. Điều Khiển Số Lượng Phật Tử Đạo Tràng (0 — 60 Người)</h2>
+        <h2>👥 3. Điều Khiển Số Lượng Phật Tử Đạo Tràng (0 — 64 Người)</h2>
         <div style="display: flex; align-items: center; justify-content: space-between;">
           <span style="font-size: 14.5px; color: var(--gold-light); font-weight: 700;">Số Phật Tử Đang Quỳ Lễ:</span>
-          <span id="devoteeCountBadge" style="background: rgba(244, 193, 80, 0.2); border: 1.5px solid var(--gold); padding: 4px 16px; border-radius: 999px; color: var(--gold-light); font-weight: 800; font-size: 16px;">24 / 60</span>
+          <span id="devoteeCountBadge" style="background: rgba(244, 193, 80, 0.2); border: 1.5px solid var(--gold); padding: 4px 16px; border-radius: 999px; color: var(--gold-light); font-weight: 800; font-size: 16px;">48 / 64</span>
         </div>
-        <input type="range" id="devoteeSlider" min="0" max="60" value="24" step="2" style="width: 100%; accent-color: var(--gold); cursor: pointer; height: 8px;" />
+        <input type="range" id="devoteeSlider" min="0" max="64" value="48" step="2" style="width: 100%; accent-color: var(--gold); cursor: pointer; height: 8px;" />
         <div class="row" style="margin-top: 4px; flex-wrap: wrap;">
           <button class="btn" onclick="setDevoteeCount(0)">Vắng (0)</button>
-          <button class="btn" onclick="setDevoteeCount(12)">Ít (12)</button>
-          <button class="btn" onclick="setDevoteeCount(24)">Vừa (24)</button>
+          <button class="btn" onclick="setDevoteeCount(16)">Ít (16)</button>
+          <button class="btn" onclick="setDevoteeCount(32)">Vừa (32)</button>
           <button class="btn gold" onclick="setDevoteeCount(48)">Đông (48)</button>
-          <button class="btn gold" onclick="setDevoteeCount(60)">Kín Chùa (60)</button>
+          <button class="btn gold" onclick="setDevoteeCount(64)">Kín Chùa (64)</button>
         </div>
       </section>
 
@@ -232,14 +232,14 @@
 
     function setDevoteeCount(count) {
       if (devoteeSlider) devoteeSlider.value = count;
-      if (devoteeCountBadge) devoteeCountBadge.textContent = `${count} / 60`;
+      if (devoteeCountBadge) devoteeCountBadge.textContent = `${count} / 64`;
       sendRpc('temple.setDevoteeCount', { count });
     }
 
     if (devoteeSlider) {
       devoteeSlider.addEventListener('input', (e) => {
         const val = Number(e.target.value);
-        if (devoteeCountBadge) devoteeCountBadge.textContent = `${val} / 60`;
+        if (devoteeCountBadge) devoteeCountBadge.textContent = `${val} / 64`;
       });
       devoteeSlider.addEventListener('change', (e) => {
         const val = Number(e.target.value);
@@ -273,7 +273,7 @@
         `Hương đã thắp: ${st.totalIncense} | Tổng Công Đức: ${st.totalMerit} | ZeroTTS: ${st.tts?.status} (Giọng: ${st.tts?.voice})`;
       if (typeof st.settings?.devoteeCount === 'number' && document.activeElement !== devoteeSlider) {
         if (devoteeSlider) devoteeSlider.value = st.settings.devoteeCount;
-        if (devoteeCountBadge) devoteeCountBadge.textContent = `${st.settings.devoteeCount} / 60`;
+        if (devoteeCountBadge) devoteeCountBadge.textContent = `${st.settings.devoteeCount} / 64`;
       }
     }
     refreshStatus();

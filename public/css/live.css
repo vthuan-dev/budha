@@ -593,6 +593,7 @@ body.obs-mode .stage-wrapper {
   pointer-events: none;
   contain: layout style;
   will-change: transform;
+  transform-origin: bottom center;
 }
 
 .hall-seat .devotee-sprite {
