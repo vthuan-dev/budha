@@ -150,23 +150,30 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
     const colsPerSide = 4;
     const rawSeats = [];
 
-    const yStart = 1130; // Hàng xa nhất (đặt vững trên sàn gỗ, dưới bậc ban thờ)
-    const yEnd = 1660;   // Hàng gần nhất (ngang chân đệm Chủ Lễ, giữ thoáng thảm đỏ và hoa sen vàng)
-    const scaleStart = 0.26;
-    const scaleEnd = 0.76;
+    const yStart = 1060; // Hàng xa nhất (dưới bậc ban thờ, trên sàn gỗ)
+    const yEnd = 1580;   // Hàng gần nhất (ngang hông đệm tròn Chủ Lễ, giữ thảm đỏ thông thoáng)
+    const scaleStart = 0.25;
+    const scaleEnd = 0.65;
 
     for (let r = 0; r < rows; r++) {
       // Phối cảnh chiều sâu 3D phi tuyến tính: hàng ở xa nén mật độ lại, hàng ở gần mở rộng tự nhiên
-      const t = Math.pow(r / (rows - 1), 1.45);
+      const t = Math.pow(r / (rows - 1), 1.35);
       const y = Math.round(yStart + t * (yEnd - yStart));
       const scale = +(scaleStart + t * (scaleEnd - scaleStart)).toFixed(2);
+      const halfW = Math.round(120 * scale / 2);
 
-      // Cánh trái thảm đỏ: tọa độ nằm hoàn toàn trên sàn gỗ bên trái (từ 140..330 đến 40..220)
-      const leftAisleX = Math.round(330 - t * 110);   // Sát đèn hoa sen mép thảm đỏ
-      const leftPillarX = Math.round(140 - t * 100);  // Sát chân cột gỗ bên trái
+      // Ranh giới 2 Line mép thảm đỏ chuẩn theo nét vẽ của bạn:
+      // Line trái: x = 922.15 - 0.4834 * y
+      // Line phải: x = 130.86 + 0.4709 * y
+      const greenLeft = 922.15 - 0.4834 * y;
+      const greenRight = 130.86 + 0.4709 * y;
+
+      // Cánh trái thảm đỏ: Toàn bộ Phật tử nằm hẳn ra phía NGOÀI (bên trái) line xanh
+      const leftAisleX = Math.round(greenLeft - halfW - 12);
+      const leftOuterX = Math.round(140 - t * 90); // 140 -> 50
       for (let c = 0; c < colsPerSide; c++) {
         const colT = c / (colsPerSide - 1);
-        const x = Math.round(leftAisleX - colT * (leftAisleX - leftPillarX));
+        const x = Math.round(leftAisleX - colT * (leftAisleX - leftOuterX));
         const isFemale = ((r + c) % 2 === 0);
         const isAisle = (c === 0);
         // Ưu tiên hàng sát lối đi trước (c=0), tỏa dần sang ngoài
@@ -186,12 +193,12 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
         });
       }
 
-      // Cánh phải thảm đỏ: tọa độ nằm hoàn toàn trên sàn gỗ bên phải (từ 750..940 đến 860..1040)
-      const rightAisleX = Math.round(750 + t * 110);  // Sát đèn hoa sen mép thảm đỏ
-      const rightPillarX = Math.round(940 + t * 100); // Sát chân cột gỗ bên phải
+      // Cánh phải thảm đỏ: Toàn bộ Phật tử nằm hẳn ra phía NGOÀI (bên phải) line xanh
+      const rightAisleX = Math.round(greenRight + halfW + 12);
+      const rightOuterX = Math.round(940 + t * 90); // 940 -> 1030
       for (let c = 0; c < colsPerSide; c++) {
         const colT = c / (colsPerSide - 1);
-        const x = Math.round(rightAisleX + colT * (rightPillarX - rightAisleX));
+        const x = Math.round(rightAisleX + colT * (rightOuterX - rightAisleX));
         const isFemale = ((r + c) % 2 !== 0);
         const isAisle = (c === 0);
         const priority = c * 100 + r * 2 + 1;
