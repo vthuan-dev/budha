@@ -150,20 +150,20 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
     const colsPerSide = 4;
     const rawSeats = [];
 
-    const yStart = 1200; // Hàng xa nhất (bên hông Chủ Lễ, đặt vững trên sàn gỗ, không trèo lên ban thờ)
-    const yEnd = 1780;   // Hàng gần nhất (tiền cảnh góc camera)
-    const scaleStart = 0.28;
-    const scaleEnd = 0.88;
+    const yStart = 1130; // Hàng xa nhất (đặt vững trên sàn gỗ, dưới bậc ban thờ)
+    const yEnd = 1660;   // Hàng gần nhất (ngang chân đệm Chủ Lễ, giữ thoáng thảm đỏ và hoa sen vàng)
+    const scaleStart = 0.26;
+    const scaleEnd = 0.76;
 
     for (let r = 0; r < rows; r++) {
-      // Phối cảnh 3D chiều sâu: các hàng ở xa nén mật độ lại, hàng ở gần mở rộng tự nhiên
-      const t = Math.pow(r / (rows - 1), 1.6);
+      // Phối cảnh chiều sâu 3D phi tuyến tính: hàng ở xa nén mật độ lại, hàng ở gần mở rộng tự nhiên
+      const t = Math.pow(r / (rows - 1), 1.45);
       const y = Math.round(yStart + t * (yEnd - yStart));
       const scale = +(scaleStart + t * (scaleEnd - scaleStart)).toFixed(2);
 
-      // Cánh trái thảm đỏ (mở rộng theo nón phối cảnh sàn gỗ)
-      const leftAisleX = Math.round(415 - t * 185);   // 415 -> 230
-      const leftPillarX = Math.round(190 - t * 160);  // 190 -> 30
+      // Cánh trái thảm đỏ: tọa độ nằm hoàn toàn trên sàn gỗ bên trái (từ 140..330 đến 40..220)
+      const leftAisleX = Math.round(330 - t * 110);   // Sát đèn hoa sen mép thảm đỏ
+      const leftPillarX = Math.round(140 - t * 100);  // Sát chân cột gỗ bên trái
       for (let c = 0; c < colsPerSide; c++) {
         const colT = c / (colsPerSide - 1);
         const x = Math.round(leftAisleX - colT * (leftAisleX - leftPillarX));
@@ -186,9 +186,9 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
         });
       }
 
-      // Cánh phải thảm đỏ (mở rộng theo nón phối cảnh sàn gỗ)
-      const rightAisleX = Math.round(665 + t * 185);  // 665 -> 850
-      const rightPillarX = Math.round(890 + t * 160); // 890 -> 1050
+      // Cánh phải thảm đỏ: tọa độ nằm hoàn toàn trên sàn gỗ bên phải (từ 750..940 đến 860..1040)
+      const rightAisleX = Math.round(750 + t * 110);  // Sát đèn hoa sen mép thảm đỏ
+      const rightPillarX = Math.round(940 + t * 100); // Sát chân cột gỗ bên phải
       for (let c = 0; c < colsPerSide; c++) {
         const colT = c / (colsPerSide - 1);
         const x = Math.round(rightAisleX + colT * (rightPillarX - rightAisleX));
