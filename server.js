@@ -263,6 +263,7 @@ const DEFAULT_STATE = {
   devotees: {},
   recentEvents: [],
   settings: {
+    devoteeCount: 24,
     ttsEnabled: true,
     ttsVoice: 'maichi',
     bgMusicEnabled: true,
@@ -1106,6 +1107,14 @@ async function handleRpcCall(method, params = {}) {
       return Rituals.grandCeremony(params);
     case 'temple.updateSettings':
       return Rituals.updateSettings(params);
+    case 'temple.setDevoteeCount': {
+      const count = Math.max(0, Math.min(60, Number(params.count) ?? 24));
+      state.settings.devoteeCount = count;
+      saveState();
+      broadcastNotification('temple.devoteeCount', { count });
+      broadcastNotification('temple.state', getPublicState());
+      return { ok: true, count };
+    }
     case 'temple.resetMerit':
       return Rituals.resetMerit();
     case 'temple.comment':

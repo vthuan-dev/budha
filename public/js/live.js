@@ -114,77 +114,107 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
     }).join('');
   }
 
-  // 5. Dựng Đạo Tràng 48 Phật Tử Quỳ Lễ Hai Bên Thảm Đỏ (6 Hàng x 4 Cột mỗi bên, Xen kẽ Nam - Nữ)
+  // 5. Dựng Đạo Tràng 60 Phật Tử Quỳ Lễ Hai Bên Thảm Đỏ (Có thể tăng giảm tùy ý từ 0 - 60 người)
   const congregationHall = document.getElementById('congregationHall');
-  const HALL_SEAT_COORDS = [];
+  let currentDevoteeCount = 24;
+  let cachedLeaderboard = [];
+  const ALL_HALL_SEATS = [];
 
   const DEFAULT_DEVOTEE_NAMES = [
     'Minh Tâm', 'Diệu Hạnh', 'Quang Phúc', 'Thanh Mai', 'An Nhiên', 'Thiện Đức',
     'Bảo Ngọc', 'Tuệ Lâm', 'Ngọc Hân', 'Thuận Hòa', 'Hồng Phúc', 'Vạn An',
     'Kim Oanh', 'Đức Thịnh', 'Gia Huy', 'Tâm Nguyện', 'Trí Dũng', 'Diệu Âm',
-    'Phước Lộc', 'Thanh Tịnh', 'Bình An', 'Như Ý', 'Tâm An', 'Liên Hoa'
+    'Phước Lộc', 'Thanh Tịnh', 'Bình An', 'Như Ý', 'Tâm An', 'Liên Hoa',
+    'Chí Thiện', 'Diệu Quang', 'Đại Nghĩa', 'Bảo Trâm', 'Vĩnh Khang', 'Tuệ Minh',
+    'Hải Đăng', 'Nguyên Thảo', 'Quốc Bảo', 'Xuân Mai', 'Tùng Lâm', 'Hương Giang',
+    'Minh Triết', 'Ngọc Lan', 'Thái Sơn', 'Cẩm Tú', 'Hoàng Long', 'Thảo Nguyên',
+    'Đức Huy', 'Yến Nhi', 'Minh Khôi', 'Khánh Linh', 'Nhật Minh', 'Hà Phương',
+    'Khánh Vân', 'Tường Vy', 'Quỳnh Anh', 'Thục Quyên', 'Gia Bảo', 'Đăng Khoa',
+    'Phúc Thịnh', 'Minh An', 'Hoàng Quân', 'Ánh Tuyết', 'Mỹ Linh', 'Trọng Hiếu'
   ];
 
-  (function buildHallGrid() {
+  (function buildHallGrid60() {
     const rows = 6;
-    const colsPerSide = 4;
-    for (let r = 0; r < rows; r++) {
-      const progress = r / (rows - 1); // 0 (xa) -> 1 (gần)
-      const y = Math.round(1160 + progress * 480); // 1160 -> 1640
-      const scale = +(0.40 + progress * 0.48).toFixed(2); // 0.40 -> 0.88
+    const colsPerSide = 5;
+    const rawSeats = [];
 
-      // Cánh trái thảm đỏ (4 cột mở rộng phối cảnh)
-      const leftInnerX = Math.round(410 - progress * 140);
-      const leftOuterX = Math.round(140 - progress * 80);
+    for (let r = 0; r < rows; r++) {
+      const progress = r / (rows - 1); // 0 (xa gần ban thờ) -> 1 (gần camera)
+      const y = Math.round(1120 + progress * 520); // 1120 -> 1640
+      const scale = +(0.36 + progress * 0.52).toFixed(2); // 0.36 -> 0.88
+
+      // Cánh trái thảm đỏ (5 cột mở rộng phối cảnh)
+      const leftInnerX = Math.round(380 - progress * 150);
+      const leftOuterX = Math.round(120 - progress * 70);
       for (let c = 0; c < colsPerSide; c++) {
         const t = c / (colsPerSide - 1);
         const x = Math.round(leftOuterX + t * (leftInnerX - leftOuterX));
         const isFemale = ((r + c) % 2 === 0);
-        HALL_SEAT_COORDS.push({ side: 'L', row: r, col: c, x, y, scale, isFemale });
+        // Ưu tiên cột gần lối đi thảm đỏ (c=4 là sát thảm đỏ nhất)
+        const priority = (4 - c) * 10 + Math.abs(r - 2);
+        rawSeats.push({ side: 'L', row: r, col: c, x, y, scale, isFemale, priority });
       }
 
-      // Cánh phải thảm đỏ (4 cột mở rộng phối cảnh)
-      const rightInnerX = Math.round(670 + progress * 140);
-      const rightOuterX = Math.round(940 + progress * 80);
+      // Cánh phải thảm đỏ (5 cột mở rộng phối cảnh)
+      const rightInnerX = Math.round(700 + progress * 150);
+      const rightOuterX = Math.round(960 + progress * 70);
       for (let c = 0; c < colsPerSide; c++) {
         const t = c / (colsPerSide - 1);
         const x = Math.round(rightInnerX + t * (rightOuterX - rightInnerX));
         const isFemale = ((r + c) % 2 !== 0);
-        HALL_SEAT_COORDS.push({ side: 'R', row: r, col: c, x, y, scale, isFemale });
+        // Ưu tiên cột gần lối đi thảm đỏ (c=0 là sát thảm đỏ nhất)
+        const priority = c * 10 + Math.abs(r - 2);
+        rawSeats.push({ side: 'R', row: r, col: c, x, y, scale, isFemale, priority });
       }
     }
 
-    // Sắp xếp thứ tự render theo chiều sâu Y (ở xa vẽ trước, ở gần vẽ sau)
-    HALL_SEAT_COORDS.sort((a, b) => a.y - b.y);
+    // Sắp xếp thứ tự ưu tiên lấp chỗ ngồi: sát lối đi trước, từ hàng giữa tỏa đều
+    rawSeats.sort((a, b) => a.priority - b.priority);
+    ALL_HALL_SEATS.push(...rawSeats);
   })();
 
-  let lastRenderedLeaderboardJson = '';
+  let lastRenderedSig = '';
+
+  function setHallDevoteeCount(count) {
+    const num = Math.max(0, Math.min(60, Number(count) ?? 24));
+    if (num !== currentDevoteeCount) {
+      currentDevoteeCount = num;
+      lastRenderedSig = '';
+      renderCongregationHall(cachedLeaderboard);
+    }
+  }
 
   function renderCongregationHall(leaderboard = []) {
     if (!congregationHall) return;
-    const hallViewers = leaderboard.slice(6);
-    const sig = JSON.stringify(hallViewers.map((d) => `${d.name}:${d.merit}`));
-    if (sig === lastRenderedLeaderboardJson && congregationHall.children.length > 0) return;
-    lastRenderedLeaderboardJson = sig;
+    cachedLeaderboard = leaderboard;
 
-    // Các vị trí ghế ưu tiên gắn thẻ tên (dọc lối đi thảm đỏ và hàng mặt tiền)
-    const labeledSeatIndices = [
-      3, 4, 11, 12, 19, 20, 27, 28, 35, 36, 43, 44,
-      2, 5, 10, 13, 18, 21, 26, 29, 34, 37, 42, 45
-    ];
+    const hallViewers = leaderboard.slice(6);
+    const sig = `${currentDevoteeCount}_` + JSON.stringify(hallViewers.map((d) => `${d.name}:${d.merit}`));
+    if (sig === lastRenderedSig && congregationHall.children.length === currentDevoteeCount) return;
+    lastRenderedSig = sig;
+
+    if (currentDevoteeCount === 0) {
+      congregationHall.innerHTML = '';
+      return;
+    }
+
+    // Chọn đúng số lượng Phật tử được cấu hình và sắp xếp theo chiều sâu Y để render z-index chuẩn
+    const activeSeats = ALL_HALL_SEATS.slice(0, currentDevoteeCount);
+    activeSeats.sort((a, b) => a.y - b.y);
+
     const seatViewerMap = new Map();
-    labeledSeatIndices.forEach((seatIdx, i) => {
-      if (hallViewers[i]) {
-        seatViewerMap.set(seatIdx, hallViewers[i]);
-      } else if (DEFAULT_DEVOTEE_NAMES[i]) {
-        seatViewerMap.set(seatIdx, {
-          name: DEFAULT_DEVOTEE_NAMES[i],
+    activeSeats.forEach((seat, idx) => {
+      if (hallViewers[idx]) {
+        seatViewerMap.set(idx, hallViewers[idx]);
+      } else if (DEFAULT_DEVOTEE_NAMES[idx]) {
+        seatViewerMap.set(idx, {
+          name: DEFAULT_DEVOTEE_NAMES[idx],
           isDefault: true
         });
       }
     });
 
-    congregationHall.innerHTML = HALL_SEAT_COORDS.map((seat, idx) => {
+    congregationHall.innerHTML = activeSeats.map((seat, idx) => {
       const viewer = seatViewerMap.get(idx);
       const spriteSrc = seat.isFemale ? '/assets/devotee_female.png' : '/assets/devotee_male.png';
       const icon = seat.isFemale ? '🌸' : '🙏';
@@ -220,7 +250,7 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
     }).join('');
   }
 
-  // Khởi tạo ngay 48 vị trí đạo tràng Phật tử khi tải trang
+  // Khởi tạo đạo tràng ban đầu
   renderCongregationHall();
 
   // Preload toàn bộ 8 frame nhân vật vào bộ nhớ để chuyển frame mượt 0ms
@@ -724,7 +754,14 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
             window.TempleGiftActionEngine?.resetStreaks?.();
             lastTikTokConnected = connected;
           }
+          if (typeof msg.params?.settings?.devoteeCount === 'number') {
+            setHallDevoteeCount(msg.params.settings.devoteeCount);
+          }
           updateUIState(msg.params);
+        } else if (msg.method === 'temple.devoteeCount') {
+          if (typeof msg.params?.count === 'number') {
+            setHallDevoteeCount(msg.params.count);
+          }
         } else if (msg.method === 'temple.gift-streak-end') {
           window.TempleGiftActionEngine?.clearStreak?.(msg.params?.groupId);
         } else if (msg.method === 'temple.event') {
