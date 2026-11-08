@@ -151,20 +151,20 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
     const rawSeats = [];
 
     // Khuôn tọa độ chuẩn theo ảnh gốc ChatGPT & nét vẽ 2 line xanh của bạn:
-    // Hàng xa nhất: y = 1210 (dưới bậc thờ, ngang vai/ngực Chủ Lễ)
-    // Hàng gần nhất: y = 1485 (ngang eo Chủ Lễ, ngay sau hàng đèn hoa sen giữa sàn)
-    // Giữ trọn vẹn tà áo xòe trắng, đệm bồ đoàn hoa sen và thảm đỏ hoa sen phía trước thông thoáng, tôn nghiêm
-    const yStart = 1210;
-    const yEnd = 1485;
-    const scaleStart = 0.25;
-    const scaleEnd = 0.50;
+    // Hàng xa nhất: y = 1205 (dưới bậc thờ, ngang vai/ngực Chủ Lễ)
+    // Hàng gần nhất: y = 1470 (ngang eo Chủ Lễ, dừng ngay phía trước đèn hoa sen giữa sàn)
+    // Tăng kích thước phật tử lên cao to, đĩnh đạc (scale: 0.32 ở xa -> 0.70 ở gần)
+    const yStart = 1205;
+    const yEnd = 1470;
+    const scaleStart = 0.32;
+    const scaleEnd = 0.70;
 
     for (let r = 0; r < rows; r++) {
       // Phối cảnh chiều sâu 3D phi tuyến tính: hàng ở xa nén mật độ lại, hàng ở gần mở rộng tự nhiên
-      const t = Math.pow(r / (rows - 1), 1.1);
+      const t = Math.pow(r / (rows - 1), 1.15);
       const y = Math.round(yStart + t * (yEnd - yStart));
       const scale = +(scaleStart + t * (scaleEnd - scaleStart)).toFixed(2);
-      const halfW = Math.round(120 * scale / 2);
+      const halfW = Math.round(140 * scale / 2);
 
       // Ranh giới 2 Line mép thảm đỏ chuẩn theo nét vẽ của bạn:
       // Line trái: x = 922.15 - 0.4834 * y
@@ -174,7 +174,7 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
 
       // Cánh trái thảm đỏ: Toàn bộ Phật tử nằm hẳn ra phía NGOÀI (bên trái) line xanh
       const leftAisleX = Math.round(greenLeft - halfW - 18);
-      const leftOuterX = Math.round(140 - t * 75); // 140 -> 65 (ôm sát cột chùa gỗ bên trái)
+      const leftOuterX = Math.round(145 - t * 85); // 145 -> 60 (ôm sát cột chùa gỗ bên trái)
       for (let c = 0; c < colsPerSide; c++) {
         const colT = c / (colsPerSide - 1);
         const x = Math.round(leftAisleX - colT * (leftAisleX - leftOuterX));
@@ -200,7 +200,7 @@ import { dispatchGiftSfx } from './gift-sfx-dispatcher.js';
 
       // Cánh phải thảm đỏ: Toàn bộ Phật tử nằm hẳn ra phía NGOÀI (bên phải) line xanh
       const rightAisleX = Math.round(greenRight + halfW + 18);
-      const rightOuterX = Math.round(940 + t * 75); // 940 -> 1015 (ôm sát cột chùa gỗ bên phải)
+      const rightOuterX = Math.round(935 + t * 85); // 935 -> 1020 (ôm sát cột chùa gỗ bên phải)
       for (let c = 0; c < colsPerSide; c++) {
         const colT = c / (colsPerSide - 1);
         const x = Math.round(rightAisleX + colT * (rightOuterX - rightAisleX));
